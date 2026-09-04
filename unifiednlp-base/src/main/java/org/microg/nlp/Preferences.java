@@ -24,6 +24,11 @@ import android.content.pm.Signature;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.FileInputStream;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -42,7 +47,24 @@ public class Preferences {
 
     public String getDefaultLocationBackends() {
         String defBackends = Settings.Secure.getString(context.getContentResolver(), DEFAULT_LOCATION_BACKENDS);
-        return defBackends == null ? "" : defBackends;
+        if (defBackends != null && !defBackends.isEmpty()) return defBackends;
+        return readConfiguredLocationBackends();
+    }
+
+    private String readConfiguredLocationBackends() {
+        try (FileInputStream input = new FileInputStream("/system/etc/microg.xml")) {
+            XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
+            parser.setInput(input, "UTF-8");
+            for (int event = parser.getEventType(); event != XmlPullParser.END_DOCUMENT;
+                 event = parser.next()) {
+                if (event == XmlPullParser.START_TAG && "location-backends".equals(parser.getName())) {
+                    String value = parser.nextText();
+                    return value == null ? "" : value.trim();
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return "";
     }
 
     public String getLocationBackends() {

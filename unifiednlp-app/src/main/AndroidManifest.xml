@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 
-<manifest package="org.microg.nlp.app"
+<manifest package="org.microg.nlp"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 

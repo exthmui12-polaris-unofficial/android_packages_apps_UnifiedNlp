@@ -28,8 +28,6 @@ import org.microg.nlp.AbstractProviderService;
 
 import java.lang.reflect.Method;
 
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR1;
 import static org.microg.nlp.api.Constants.ACTION_FORCE_LOCATION;
 import static org.microg.nlp.api.Constants.ACTION_RELOAD_SETTINGS;
 import static org.microg.nlp.api.Constants.INTENT_EXTRA_LOCATION;
@@ -43,11 +41,7 @@ public abstract class AbstractLocationService extends AbstractProviderService<Lo
     }
 
     private static void setIntentTarget(Context context, Intent intent) {
-        if (SDK_INT >= JELLY_BEAN_MR1) {
-            intent.setClass(context, LocationServiceV2.class);
-        } else {
-            intent.setClass(context, LocationServiceV1.class);
-        }
+        intent.setClass(context, LocationServiceV2.class);
     }
 
     public static boolean WAS_BOUND = false;
